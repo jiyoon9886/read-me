@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
+const axios = require("axios");
 
 //need inquirer for user input
 
@@ -11,11 +12,6 @@ const questions = [
         name: "username"
       },
       
-    {
-        type: "input",
-        message: "What is your GitHub email?",
-        name: "email"
-      },
 
     {
         type: "input",
@@ -81,7 +77,29 @@ function writeToFile(fileName, data) {
 function init() {
     //use inquirer on our array
     inquirer.prompt(questions)
-    .then(response => console.log(response))
+    .then(response => {
+        var image 
+        var userEmail 
+        axios.get("https://api.github.com/users/" + response.username)
+        .then(response => {
+            image = response.data.avatar_url;
+            userEmail = response.data.email;
+            console.log(image);
+            console.log(userEmail);
+
+        
+        }) 
+
+
+        
+    })    
+
+    .catch(function(error) {
+        console.error(error)
+    });
+        
+
+    
     //once we get our responses use .then and writeToFile
 
 }
