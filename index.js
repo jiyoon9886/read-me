@@ -2,9 +2,6 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const axios = require("axios");
 
-//need inquirer for user input
-
-
 const questions = [
     {
         type: "input",
@@ -16,7 +13,7 @@ const questions = [
     {
         type: "input",
         message: "What is your project title?",
-        name: "projectTitle"
+        name: "title"
       },
     {
         type: "input",
@@ -63,45 +60,38 @@ const questions = [
       
 ];
 
-//Expected output from GitHub API:
-    //email and profile image
-
-function writeToFile(fileName, data) {
-    fs.appendFile(fileName, data, (err) => console.log(err))
-    //generate a file 
-    //populate with data 
-    
-}
-
-
 function init() {
     //use inquirer on our array
     inquirer.prompt(questions)
     .then(response => {
-        var image 
-        var userEmail 
-        axios.get("https://api.github.com/users/" + response.username)
+        const answers = {...response}
+        axios.get("https://api.github.com/users/" + answers.username)
         .then(response => {
             image = response.data.avatar_url;
             userEmail = response.data.email;
             console.log(image);
-            console.log(userEmail);
+            console.log(userEmail);   
+        })
 
+        function writeToFile(fileName, answers) {
+          fs.appendFile("README.md", JSON.stringify(answers), null, 2, (err) => console.log(err))
+        };
+
+        writeToFile();
         
-        }) 
-
-
-        
+   
     })    
 
     .catch(function(error) {
         console.error(error)
     });
         
-
-    
-    //once we get our responses use .then and writeToFile
-
 }
 
 init();
+
+
+
+  //generate a file 
+  //populate with data 
+  
